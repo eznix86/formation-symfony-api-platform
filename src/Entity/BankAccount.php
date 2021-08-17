@@ -36,7 +36,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "groups": {"bank_account:item"}
  *      },
  *     },
- *     "PUT"}
+ *     "PUT": {
+ *         "security": "is_granted('UPDATE', object)"
+ *     }}
  * )
  * @ORM\Entity(repositoryClass=BankAccountRepository::class)
  */
