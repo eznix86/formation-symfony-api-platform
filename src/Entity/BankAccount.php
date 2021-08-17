@@ -2,11 +2,14 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\BankAccountRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 
 /**
  * @ApiResource(
@@ -37,10 +40,15 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      },
  *     },
  *     "PUT": {
- *         "security": "is_granted('UPDATE', object)"
+ *         "security": "is_granted('UPDATE', object)",
+ *          "denormalization_context": {
+ *              "groups": {"bank_account:update", "bank_account:item"}
+ *          },
  *     }}
  * )
  * @ORM\Entity(repositoryClass=BankAccountRepository::class)
+ * @ApiFilter(filterClass=BooleanFilter::class, properties={"readonly"})
+ * @ApiFilter(filterClass=DateFilter::class, properties={"created"})
  */
 class BankAccount
 {
@@ -70,6 +78,12 @@ class BankAccount
      * @Groups({"bank_account:item", "bank_account:write", "bank_account:create"})
      */
     private $readonly;
+
+    /**
+     * @Groups({"bank_account:create", "bank_account:update"})
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $created;
 
     public function getId(): ?int
     {
@@ -108,6 +122,18 @@ class BankAccount
     public function setReadonly(bool $readonly): self
     {
         $this->readonly = $readonly;
+
+        return $this;
+    }
+
+    public function getCreated(): ?\DateTimeInterface
+    {
+        return $this->created;
+    }
+
+    public function setCreated(?\DateTimeInterface $created): self
+    {
+        $this->created = $created;
 
         return $this;
     }
