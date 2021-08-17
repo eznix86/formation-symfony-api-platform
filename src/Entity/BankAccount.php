@@ -36,11 +36,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "groups": {"bank_account:item"}
  *      },
  *     },
- *     "PUT": {
- *      "validation_groups": {
- *          "bank_account:validation_create"
- *      }
- * }}
+ *     "PUT"}
  * )
  * @ORM\Entity(repositoryClass=BankAccountRepository::class)
  */
